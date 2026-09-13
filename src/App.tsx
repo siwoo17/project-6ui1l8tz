@@ -12,6 +12,7 @@ import {
   HeartHandshake,
   MapPin,
   Menu,
+  MessageCircle,
   Phone,
   Plus,
   Star,
@@ -29,6 +30,38 @@ const mapsUrl = 'https://yandex.ru/maps/-/CTtnfF03'
 const reviewsUrl = 'https://yandex.ru/maps/org/gago/204302137873/reviews/'
 const phone = '+7 (977) 261-66-35'
 const phoneHref = 'tel:+79772616635'
+const messengers = [
+  { name: 'Telegram', href: 'https://t.me/Gagik0978', hint: '@Gagik0978' },
+  {
+    name: 'WhatsApp',
+    href: 'https://wa.me/79772616635',
+    hint: '+7 977 261-66-35',
+  },
+  {
+    name: 'MAX',
+    href: 'https://max.ru',
+    hint: 'найти по номеру +7 977 261-66-35',
+  },
+]
+
+function MessengerLinks({ className = '' }: { className?: string }) {
+  return (
+    <ul className={`messengers ${className}`} aria-label="Мессенджеры">
+      {messengers.map((item) => (
+        <li key={item.name}>
+          <a href={item.href} target="_blank" rel="noreferrer">
+            <MessageCircle size={15} />
+            <span>
+              <strong>{item.name}</strong>
+              <small>{item.hint}</small>
+            </span>
+            <ArrowUpRight size={14} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 function Emblem({ className = '' }: { className?: string }) {
   return (
@@ -179,6 +212,7 @@ function BookingDialog({
           {phone}
           <ArrowUpRight size={18} />
         </a>
+        <MessengerLinks className="messengers-dialog" />
         <button className="copy-button" onClick={copyPhone}>
           {copied ? <Check size={15} /> : <Copy size={15} />}
           {copied ? 'Номер скопирован' : 'Скопировать номер'}
@@ -845,6 +879,7 @@ export default function App() {
                   <span>Время приёма — по договорённости</span>
                 </div>
               </div>
+              <MessengerLinks className="messengers-contacts" />
               <div className="contact-buttons">
                 <button
                   className="button button-cream"

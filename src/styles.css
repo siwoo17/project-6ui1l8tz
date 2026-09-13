@@ -2173,3 +2173,72 @@ h2 + .eyebrow {
     animation: none !important;
   }
 }
+
+.messengers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+.messengers a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 11px;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.messengers a:hover {
+  border-color: var(--wine);
+}
+.messengers a > svg:first-child {
+  color: var(--wine);
+  flex-shrink: 0;
+}
+.messengers a > span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.messengers strong {
+  font-weight: 500;
+}
+.messengers small {
+  font-size: 9px;
+  color: var(--muted);
+}
+.messengers a > svg:last-child {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.messengers-dialog {
+  margin-top: 12px;
+}
+.messengers-contacts {
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 22px;
+}
+.messengers-contacts a {
+  border-color: #c09b864a;
+  color: #fbf4ea;
+}
+.messengers-contacts a:hover {
+  border-color: #e2c6b3;
+  background: #ffffff0d;
+}
+.messengers-contacts a > svg:first-child,
+.messengers-contacts small {
+  color: #d8bcb0;
+}
+@media (max-width: 1000px) {
+  .messengers-contacts {
+    grid-template-columns: 1fr;
+  }
+}
