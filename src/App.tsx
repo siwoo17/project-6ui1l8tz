@@ -93,15 +93,20 @@ function BookingDialog({
   const service = services.find((item) => item.id.toString() === serviceId)
 
   useEffect(() => {
-    const previousFocus = document.activeElement
-    ref.current?.showModal()
+    const dialog = ref.current
+    dialog?.showModal()
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
+      dialog?.close()
       document.body.style.overflow = previousOverflow
-      if (previousFocus instanceof HTMLElement) previousFocus.focus()
     }
   }, [])
+
+  function closeDialog() {
+    ref.current?.close()
+    onClose()
+  }
 
   async function copyPhone() {
     try {
@@ -118,15 +123,18 @@ function BookingDialog({
       ref={ref}
       className="booking-dialog"
       aria-labelledby="booking-title"
-      onCancel={onClose}
+      onCancel={(event) => {
+        event.preventDefault()
+        closeDialog()
+      }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose()
+        if (event.target === event.currentTarget) closeDialog()
       }}
     >
       <div className="dialog-inner">
         <button
           className="icon-button dialog-close"
-          onClick={onClose}
+          onClick={closeDialog}
           aria-label="Закрыть запись"
         >
           <X size={22} />
@@ -272,12 +280,27 @@ export default function App() {
     null,
   )
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+  const bookingTrigger = useRef<HTMLElement | null>(null)
+  const menuToggle = useRef<HTMLButtonElement>(null)
   const visibleServices = featuredServices(category)
   const allServices = filterServices(category)
 
   function openBooking(selected: Service | null = null) {
+    bookingTrigger.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null
     setMobileMenu(false)
     setBooking({ selected })
+  }
+
+  function closeBooking() {
+    const trigger = bookingTrigger.current
+    setBooking(null)
+    requestAnimationFrame(() => {
+      const target = trigger?.isConnected ? trigger : menuToggle.current
+      target?.focus({ preventScroll: true })
+    })
   }
 
   function changeCategory(next: Category) {
@@ -310,6 +333,7 @@ export default function App() {
             </button>
           </div>
           <button
+            ref={menuToggle}
             className="icon-button menu-toggle"
             aria-label={mobileMenu ? 'Закрыть меню' : 'Открыть меню'}
             aria-expanded={mobileMenu}
@@ -894,10 +918,7 @@ export default function App() {
         </button>
       </div>
       {booking && (
-        <BookingDialog
-          selected={booking.selected}
-          onClose={() => setBooking(null)}
-        />
+        <BookingDialog selected={booking.selected} onClose={closeBooking} />
       )}
     </>
   )
